@@ -4,7 +4,8 @@ import {
   createCourse,
   getCourses,
   getCourseDetails,
-  getCourseForLearning, // <-- Hàm mới
+  getCourseForLearning,
+  getMyCourses, // <-- Hàm mới
 } from "../controllers/course.controller.js";
 import { createLesson } from "../controllers/lesson.controller.js";
 import { verifyToken } from "../middlewares/auth.middleware.js";
@@ -25,5 +26,8 @@ router.post("/create", verifyToken, createCourse);
 
 // [POST] /api/courses/:courseId/lessons - Thêm bài giảng vào khóa học (Private)
 router.post("/:courseId/lessons", verifyToken, createLesson);
+
+// Thêm route mới
+router.get('/instructor/my-courses', verifyToken, getMyCourses);
 
 export default router;

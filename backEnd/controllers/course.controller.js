@@ -196,3 +196,17 @@ export const getCourseForLearning = async (req, res) => {
       .json({ success: false, message: "Lỗi server khi tải nội dung học!" });
   }
 };
+
+// [API] Lấy danh sách khóa học do Giảng viên hiện tại tạo
+  export const getMyCourses = async (req, res) => {
+  try {
+    const instructorId = req.user.userId;
+    const result = await pool.query(
+      'SELECT id, title, price, is_published FROM courses WHERE instructor_id = $1 ORDER BY created_at DESC',
+      [instructorId]
+    );
+    res.status(200).json({ success: true, courses: result.rows });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Lỗi server!' });
+  }
+};

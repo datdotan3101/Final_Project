@@ -23,12 +23,11 @@ export default function Login() {
       );
 
       if (response.data.success) {
-        // Lưu token vào localStorage để giữ trạng thái đăng nhập
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
 
         alert("Đăng nhập thành công!");
-        navigate("/"); // Chuyển hướng về trang chủ
+        navigate("/courses"); // <-- Chuyển hướng sang trang danh sách khóa học
       }
     } catch (err) {
       setError(err.response?.data?.message || "Lỗi kết nối đến server!");
@@ -56,7 +55,7 @@ export default function Login() {
             <input
               type="email"
               required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
               placeholder="Nhập email của bạn"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -70,7 +69,7 @@ export default function Login() {
             <input
               type="password"
               required
-              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
               placeholder="••••••••"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

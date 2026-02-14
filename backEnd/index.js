@@ -11,6 +11,7 @@ import courseRoutes from "./routes/course.routes.js";
 import paymentRoutes from "./routes/payment.routes.js";
 import progressRoutes from "./routes/progress.routes.js";
 import chatRoutes from "./routes/chat.routes.js"; // <-- Thêm dòng này
+import userRoutes from "./routes/user.routes.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -18,16 +19,19 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+
 // Đăng ký các endpoints
 app.use("/api/auth", authRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/chat", chatRoutes); // <-- Thêm dòng này
-
+app.use("/api/users", userRoutes);
 app.get("/", (req, res) => {
   res.send("E-Learning Marketplace API is running...");
 });
+
+app.use("/uploads", express.static("uploads"));
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
