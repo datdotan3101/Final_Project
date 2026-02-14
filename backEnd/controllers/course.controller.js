@@ -142,3 +142,57 @@ export const getCourseDetails = async (req, res) => {
     });
   }
 };
+
+// [API] Lấy nội dung khóa học để học (Private - Chỉ dành cho người đã mua hoặc Instructor)
+export const getCourseForLearning = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const userId = req.user.userId;
+
+    // 1. Kiểm tra quyền truy cập: User đã mua khóa học này chưa? HOẶC User có phải là người tạo khóa học không?
+    const accessCheck = await pool.query(
+      `SELECT 1 FROM enrollments WHERE user_id = $1 AND course_id = $2
+       UNION
+       SELECT 1 FROM courses WHERE instructor_id = $1 AND id = $2`,
+      [userId, courseId],
+    );
+
+    // Nếu không có kết quả nào trả về -> Không có quyền truy cập
+    if (accessCheck.rows.length === 0) {
+      return res.status(403).json({
+        success: false,
+        message: "Bạn chưa mua khóa học này nên không thể vào học!",
+      });
+    }
+
+    // 2. Nếu đã có quyền, lấy danh sách bài giảng (Lần này CÓ TRẢ VỀ video_url)
+    const lessonsQuery = `
+      SELECT id, title, video_url, duration, position 
+      FROM lessons 
+      WHERE course_id = $1 
+      ORDER BY position ASC
+    `;
+    const lessonsResult = await pool.query(lessonsQuery, [courseId]);
+
+    // 3. Lấy thêm tiến độ học tập (Progress) của user này xem họ đã check (hoàn thành) những bài nào
+    const progressQuery = `
+      SELECT lesson_id, is_completed 
+      FROM progress 
+      WHERE user_id = $1 AND course_id = $2
+    `;
+    const progressResult = await pool.query(progressQuery, [userId, courseId]);
+
+    // 4. Trả về kết quả
+    res.status(200).json({
+      success: true,
+      message: "Chào mừng bạn quay lại học tập!",
+      lessons: lessonsResult.rows,
+      progress: progressResult.rows, // Mảng chứa các ID bài giảng đã tick xanh
+    });
+  } catch (error) {
+    console.error("Lỗi khi tải nội dung học:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Lỗi server khi tải nội dung học!" });
+  }
+};
