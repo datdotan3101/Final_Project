@@ -5,7 +5,10 @@ import pool from "../config/db.js";
 export const createCourse = async (req, res) => {
   try {
     const instructor_id = req.user.userId;
-    const { title, description, price, thumbnail_url, category } = req.body;
+    const { title, description, price, category } = req.body;
+    const thumbnail_url = req.file
+      ? `http://localhost:5000/uploads/${req.file.filename}`
+      : req.body.thumbnail_url || null;
 
     if (!title || !price) {
       return res.status(400).json({
@@ -198,15 +201,15 @@ export const getCourseForLearning = async (req, res) => {
 };
 
 // [API] Lấy danh sách khóa học do Giảng viên hiện tại tạo
-  export const getMyCourses = async (req, res) => {
+export const getMyCourses = async (req, res) => {
   try {
     const instructorId = req.user.userId;
     const result = await pool.query(
-      'SELECT id, title, price, is_published FROM courses WHERE instructor_id = $1 ORDER BY created_at DESC',
-      [instructorId]
+      "SELECT id, title, price, is_published FROM courses WHERE instructor_id = $1 ORDER BY created_at DESC",
+      [instructorId],
     );
     res.status(200).json({ success: true, courses: result.rows });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Lỗi server!' });
+    res.status(500).json({ success: false, message: "Lỗi server!" });
   }
 };

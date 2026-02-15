@@ -12,6 +12,8 @@ import LearningPlayer from "./pages/LearningPlayer";
 import MainLayout from "./components/MainLayout"; // <-- Import Layout
 import EditProfile from "./pages/EditProfile";
 import InstructorDashboard from "./pages/InstructorDashboard";
+import CreateCourse from "./pages/CreateCourse";
+import CurriculumManager from "./pages/CurriculumManager";
 
 function App() {
   return (
@@ -32,6 +34,11 @@ function App() {
           <Route
             path="/instructor/dashboard"
             element={<InstructorDashboard />}
+          />
+          <Route path="/instructor/create-course" element={<CreateCourse />} />
+          <Route
+            path="/instructor/course/:courseId/manage"
+            element={<CurriculumManager />}
           />
         </Route>
       </Routes>

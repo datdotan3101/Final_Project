@@ -12,6 +12,8 @@ import paymentRoutes from "./routes/payment.routes.js";
 import progressRoutes from "./routes/progress.routes.js";
 import chatRoutes from "./routes/chat.routes.js"; // <-- Thêm dòng này
 import userRoutes from "./routes/user.routes.js";
+import curriculumRoutes from "./routes/curriculum.routes.js";
+import uploadRoutes from "./routes/upload.routes.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,9 +29,13 @@ app.use("/api/payment", paymentRoutes);
 app.use("/api/progress", progressRoutes);
 app.use("/api/chat", chatRoutes); // <-- Thêm dòng này
 app.use("/api/users", userRoutes);
+app.use("/api/upload", uploadRoutes);
+
 app.get("/", (req, res) => {
   res.send("E-Learning Marketplace API is running...");
 });
+
+app.use("/api/curriculum", curriculumRoutes);
 
 app.use("/uploads", express.static("uploads"));
 

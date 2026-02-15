@@ -129,9 +129,12 @@ export default function InstructorDashboard() {
                     </td>
                     <td className="px-6 py-4 text-gray-600">${course.price}</td>
                     <td className="px-6 py-4 text-right">
-                      <button className="text-blue-600 hover:text-blue-800 font-medium mr-4">
-                        Chỉnh sửa
-                      </button>
+                      <Link
+                        to={`/instructor/course/${course.id}/manage`}
+                        className="text-blue-600 hover:text-blue-800 font-medium mr-4"
+                      >
+                        Quản lý nội dung
+                      </Link>
                       <button className="text-red-500 hover:text-red-700 font-medium text-sm">
                         Xóa
                       </button>
